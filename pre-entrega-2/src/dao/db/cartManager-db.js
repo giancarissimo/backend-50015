@@ -41,6 +41,12 @@ class CartManager {
                 return productId
             }
 
+            // Se verifica que la cantidad sea un número positivo
+            if (typeof quantity !== 'number' || quantity <= 0) {
+                console.error(`Quantity (${quantity}) must be a positive number.`)
+                return quantity
+            }
+
             // Se verifica si el producto ya existe en el carrito y, sino, se agrega.
             const productExist = cart.products.find(p => p.product.equals(productId))
             if (productExist) {
@@ -62,14 +68,14 @@ class CartManager {
 
     async clearCart(cartId) {
         try {
+            // Se verifica si el carrito existe en el array de carritos
             const cart = await CartModel.findById(cartId).lean().exec()
-
             if (!cart) {
                 console.error(`No cart exists with the id ${cartId}`)
                 return cartId
             }
 
-            // se vacia el array de productos del carrito
+            // Se vacia el array de productos del carrito
             cart.products = []
             await CartModel.findByIdAndUpdate(cartId, { products: cart.products }).exec()
         } catch (error) {
@@ -80,7 +86,14 @@ class CartManager {
 
     async deleteProductFromCart(cartId, productId) {
         try {
-            // Se Busca el carrito por su ID y se actualiza el array de productos
+            // Se verifica si el producto existe en el array de productos
+            const verifyProductId = await productManager.getProductById(productId)
+            if (!verifyProductId) {
+                res.status(404).json({ error: `A product with the id ${productId} was not found.` })
+                return productId
+            }
+
+            // Se busca el carrito por su ID y se actualiza el array de productos
             const updatedCart = await CartModel.findByIdAndUpdate(
                 cartId,
                 { $pull: { products: { product: productId } } }, // Se utiliza $pull para eliminar el producto del array
@@ -101,24 +114,37 @@ class CartManager {
 
     async updateProductQuantityInCart(cartId, productId, newQuantity) {
         try {
-            // se verifica si el carrito existe en el array de carritos
+            // Se verifica si el carrito existe en el array de carritos
             const cart = await this.getCartById(cartId)
             if (!cart) {
                 console.error(`No cart exists with the id ${cartId}`)
                 return null
             }
 
-            // se verifica si el producto existe en el carrito
+            // Se verifica si el producto existe en el array de productos
+            const verifyProductId = await productManager.getProductById(productId)
+            if (!verifyProductId) {
+                res.status(404).json({ error: `A product with the id ${productId} was not found.` })
+                return productId
+            }
+
+            // Se verifica si el producto existe en el carrito
             const productToUpdate = cart.products.find(p => p.product.equals(productId))
             if (!productToUpdate) {
-                console.error(`Product with id ${productId} not found in the cart.`)
+                console.error(`A product with the id ${productId} was not found in the cart.`)
                 return null
+            }
+
+            // Se verifica que la nueva cantidad sea un número positivo
+            if (typeof newQuantity !== 'number' || newQuantity <= 0) {
+                console.error(`Quantity (${newQuantity}) must be a positive number.`)
+                return newQuantity
             }
 
             // Se actualiza la cantidad del producto
             productToUpdate.quantity = newQuantity
 
-            // Guardar los cambios
+            // Se guardan los cambios
             await cart.save()
             return cart
         } catch (error) {
@@ -133,7 +159,7 @@ class CartManager {
             return updatedCart
         } catch (error) {
             console.error("Error updating cart:", error)
-            throw error;
+            throw error
         }
     }
 }

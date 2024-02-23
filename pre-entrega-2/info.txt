@@ -1,4 +1,4 @@
-66Pre entrega 2 - Profesionalizando la BD
+Pre entrega 2 - Profesionalizando la BD
 
 Consigna:
     - Deberás entregar el proyecto que has venido armando, cambiando persistencia en base de datos, además de agregar algunos endpoints nuevos a tu ecommerce.
