@@ -95,12 +95,12 @@ class ViewsController {
         }
     }
 
-    async renderProfile(req, res) {
+    async renderAccount(req, res) {
         // Si el usuario no está loggeado, se deberá loggear
         if (!req.session.login) {
             return res.redirect('/login')
         }
-        res.render('profile', { title: 'Profile' })
+        res.render('account', { title: 'Your Account' })
     }
 
     async renderCartGuest(req, res) {

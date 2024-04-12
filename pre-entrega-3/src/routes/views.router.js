@@ -18,7 +18,7 @@ module.exports = (viewsController) => {
     router.get('/chat', viewsController.renderChat)
 
     // Ruta para la vista profile.handlebars
-    router.get('/profile', viewsController.renderProfile)
+    router.get('/account', viewsController.renderAccount)
 
     // Ruta para la vista guestCart.handlebars
     router.get('/cart/guest', viewsController.renderCartGuest)
