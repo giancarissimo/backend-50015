@@ -23,5 +23,8 @@ module.exports = (cartController) => {
     // Ruta PUT api/carts/:cid - se actualiza el carrito con un arreglo de productos
     router.put('/:cid', cartController.updateCart)
 
+    // Ruta POST api/carts/:cid/purchase - se ejecuta el proceso de finalización de compra
+    router.post('/:cid/purchase', cartController.completePurchase)
+
     return router
 }

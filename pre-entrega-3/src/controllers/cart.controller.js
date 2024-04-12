@@ -1,3 +1,5 @@
+const UserModel = require('../models/user.model')
+const TicketModel = require('../models/ticket.model')
 const CartServices = require('../services/cartServices.js')
 const cartServices = new CartServices()
 const ProductServices = require('../services/productServices.js')
@@ -207,7 +209,8 @@ class CartController {
             // Se guarda el carrito actualizado en la base de datos
             await cart.save()
 
-            res.status(200).json({ unavailableProducts })
+            // res.status(200).json({ unavailableProducts })
+            res.status(200).json({ ticket })
         } catch (error) {
             console.error("Error processing purchase:", error)
             res.status(500).json({ error: 'Internal server error' })
